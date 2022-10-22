@@ -3,8 +3,6 @@ package cl.binter.apiusers.configuration;
 import cl.binter.apiusers.domain.entities.CommonUserFactory;
 import cl.binter.apiusers.domain.entities.UserFactory;
 import cl.binter.apiusers.infrastructure.UserResponseFormatter;
-import cl.binter.apiusers.usecase.UserBoundary;
-import cl.binter.apiusers.usecase.UserInteractor;
 import cl.binter.apiusers.usecase.UserPresenter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

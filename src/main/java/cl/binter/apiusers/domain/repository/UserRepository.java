@@ -5,8 +5,8 @@ import java.util.List;
 import cl.binter.apiusers.usecase.requests.UserDSRequestModel;
 
 public interface UserRepository {
-    public boolean existsByName(String name);
-    public void save(UserDSRequestModel requestModel);
-    public void delete(String name);
-    public List<String> getAll();
+    boolean existsByName(String name);
+    void save(UserDSRequestModel requestModel);
+    void delete(String name);
+    List<String> getAll();
 }

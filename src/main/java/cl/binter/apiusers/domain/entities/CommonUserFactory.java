@@ -1,7 +1,5 @@
 package cl.binter.apiusers.domain.entities;
 
-import org.springframework.stereotype.Component;
-
 public class CommonUserFactory implements UserFactory{
 
     @Override

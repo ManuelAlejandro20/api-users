@@ -15,11 +15,8 @@ import cl.binter.apiusers.usecase.responses.UserResponseAllModel;
 import cl.binter.apiusers.usecase.responses.UserResponseModel;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 
 
 @Service

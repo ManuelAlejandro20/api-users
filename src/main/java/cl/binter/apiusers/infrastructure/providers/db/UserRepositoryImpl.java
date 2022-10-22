@@ -30,7 +30,7 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     public List<String> getAll() {
         List<UserDataMapper> users = repository.findAll();
-        List<String> usersString = new ArrayList<String>();
+        List<String> usersString = new ArrayList<>();
         for(UserDataMapper u : users) {
             usersString.add(u.getName());
         }

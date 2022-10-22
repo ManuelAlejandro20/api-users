@@ -1,6 +1,5 @@
 package cl.binter.apiusers;
 
-import cl.binter.apiusers.domain.repository.UserRepository;
 import cl.binter.apiusers.infrastructure.controller.UserController;
 import cl.binter.apiusers.usecase.UserBoundary;
 import cl.binter.apiusers.usecase.requests.UserRequestModel;
@@ -13,15 +12,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -61,12 +58,12 @@ public class ApiUsersApplicationTests {
     public void registerNewUser() throws Exception {
         LocalDateTime responseTime = LocalDateTime.now();
         String time = responseTime.format(DateTimeFormatter.ofPattern("hh:mm:ss"));
-        UserResponse ur = new UserResponseModel("ElAbazo", time);
+        UserResponse ur = new UserResponseModel("Manu", time);
         when(userBoundary.create(any(UserRequestModel.class))).thenReturn(ur);
 
         mvc.perform(post("/api/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"ElAbazo\",\"password\":\"987654321\"}"))
+                .content("{\"name\":\"Manu\",\"password\":\"987654321\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.time").value(time))
                 .andDo(print());
