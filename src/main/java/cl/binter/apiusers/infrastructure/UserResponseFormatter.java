@@ -3,18 +3,18 @@ package cl.binter.apiusers.infrastructure;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import cl.binter.apiusers.usecase.responses.UserResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import cl.binter.apiusers.usecase.UserPresenter;
-import cl.binter.apiusers.usecase.responses.UserResponse;
 
 public class UserResponseFormatter implements UserPresenter{
 
     @Override
     public UserResponse prepareSuccessView(UserResponse response) {
-        LocalDateTime responseTime = LocalDateTime.parse(response.getTime());
-        response.setTime(responseTime.format(DateTimeFormatter.ofPattern("hh:mm:ss")));
+        LocalDateTime responseTime = LocalDateTime.now();
+        response.setCurrentTime(responseTime.format(DateTimeFormatter.ofPattern("hh:mm:ss")));
         return response;
     }
 

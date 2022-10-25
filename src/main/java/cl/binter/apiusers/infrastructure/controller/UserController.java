@@ -1,11 +1,10 @@
 package cl.binter.apiusers.infrastructure.controller;
 
+import cl.binter.apiusers.usecase.responses.UserResponse;
 import org.springframework.web.bind.annotation.*;
 
 import cl.binter.apiusers.usecase.UserBoundary;
-import cl.binter.apiusers.usecase.requests.UserDeleteRequestModel;
 import cl.binter.apiusers.usecase.requests.UserRequestModel;
-import cl.binter.apiusers.usecase.responses.UserResponse;
 
 import lombok.AllArgsConstructor;
 
@@ -22,13 +21,23 @@ public class UserController {
     }
 
     @PostMapping("/delete")
-    public UserResponse delete(@RequestBody UserDeleteRequestModel requestModel){
+    public UserResponse delete(@RequestBody UserRequestModel requestModel){
         return userBoundary.delete(requestModel);
     }
 
-    @GetMapping("/users")
+    @GetMapping("/users/all")
     public UserResponse getAll(){
         return userBoundary.getAll();
+    }
+
+    @GetMapping("/users/notdeleted")
+    public UserResponse getAllNotDeleted(){
+        return userBoundary.getAllNotDeleted();
+    }
+
+    @GetMapping("/users/deleted")
+    public UserResponse getAllDeleted(){
+        return userBoundary.getAllDeleted();
     }
 
 }

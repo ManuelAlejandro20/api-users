@@ -1,12 +1,15 @@
 package cl.binter.apiusers.infrastructure.providers.db;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import cl.binter.apiusers.domain.entities.CommonUser;
+import cl.binter.apiusers.domain.entities.User;
 import cl.binter.apiusers.domain.repository.UserRepository;
 import cl.binter.apiusers.infrastructure.providers.db.model.UserDataMapper;
-import cl.binter.apiusers.usecase.requests.UserDSRequestModel;
 
+import cl.binter.apiusers.usecase.requests.UserRequestModel;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -18,28 +21,39 @@ public class UserRepositoryImpl implements UserRepository{
 
     @Override
     public boolean existsByName(String name) {
-        return repository.existsById(name);
+        return repository.getUserByName(name) != null;
     }
 
     @Override
-    public void save(UserDSRequestModel requestModel) {
-        UserDataMapper accountDataMapper = new UserDataMapper(requestModel.getName(), requestModel.getPassword(), requestModel.getCreationTime());
+    public void save(UserRequestModel requestModel) {
+        UserDataMapper accountDataMapper = new UserDataMapper(requestModel.getName(), requestModel.getPassword());
         repository.save(accountDataMapper);
     }
 
     @Override
-    public List<String> getAll() {
-        List<UserDataMapper> users = repository.findAll();
-        List<String> usersString = new ArrayList<>();
-        for(UserDataMapper u : users) {
-            usersString.add(u.getName());
-        }
-        return usersString;
+    public List<User> getAll() {
+        return convertToUsers(repository.findAll());
     }
 
     @Override
-    public void delete(String name) {
-        repository.deleteById(name);
+    public List<User> getAll(boolean onlyDeleted) {
+        if(onlyDeleted){
+            return convertToUsers(repository.getAllDeleted());
+        }
+        return convertToUsers(repository.getAllNotDeleted());
+    }
+
+    @Override
+    public void delete(UserRequestModel requestModel) {
+        repository.logicalDeleteByName(requestModel.getName(), LocalDateTime.now());
+    }
+
+    private List<User> convertToUsers(List<UserDataMapper> usersDataMapper){
+        List<User> users = new ArrayList<>();
+        for(UserDataMapper u : usersDataMapper) {
+            users.add(new CommonUser(u.getId(), u.getName(), u.getPassword(), u.getCreatedAt(), u.getUpdatedAt(), u.getDeletedAt()));
+        }
+        return users;
     }
 
 }
