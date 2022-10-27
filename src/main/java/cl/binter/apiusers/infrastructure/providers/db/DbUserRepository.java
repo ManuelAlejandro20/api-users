@@ -19,6 +19,11 @@ public interface DbUserRepository extends JpaRepository<UserDataMapper, String> 
                     "WHERE u.name = ?1", nativeQuery = true)
     UserDataMapper getUserByName(String name);
 
+    @Query(value =  "SELECT u.deleted_at " +
+            "FROM users AS u " +
+            "WHERE u.name = ?1", nativeQuery = true)
+    LocalDateTime getDeletedDateByUser(String name);
+
     @Query(value =  "SELECT * " +
                     "FROM users " +
                     "WHERE deleted_at IS NULL ", nativeQuery = true)

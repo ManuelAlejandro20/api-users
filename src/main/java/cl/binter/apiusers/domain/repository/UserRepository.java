@@ -7,6 +7,8 @@ import cl.binter.apiusers.usecase.requests.UserRequestModel;
 
 public interface UserRepository {
     boolean existsByName(String name);
+    boolean isDeleted(String name);
+    User getUserByName(String name);
     void save(UserRequestModel requestModel);
     void delete(UserRequestModel requestModel);
     List<User> getAll();

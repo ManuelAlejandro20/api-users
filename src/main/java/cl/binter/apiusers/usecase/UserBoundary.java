@@ -9,4 +9,7 @@ public interface UserBoundary {
     UserResponse getAll();
     UserResponse getAllNotDeleted();
     UserResponse getAllDeleted();
+    UserResponse responseToken(String jwt, String username);
+    UserResponse getInfo(String username);
+
 }

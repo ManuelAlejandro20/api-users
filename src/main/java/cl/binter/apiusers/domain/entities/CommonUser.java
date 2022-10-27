@@ -13,6 +13,7 @@ public class CommonUser implements User{
     private int id;
     private String name;
     private String password;
+    private String rol;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;

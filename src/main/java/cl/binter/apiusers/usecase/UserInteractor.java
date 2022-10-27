@@ -32,7 +32,7 @@ public class UserInteractor implements UserBoundary{
 
         userRepository.save(requestModel);
 
-        UserResponseModel accountResponseModel = new UserResponseModel(user.getName());
+        UserResponseModel accountResponseModel = new UserResponseModel("User " + user.getName() + " has been created.");
         return userPresenter.prepareSuccessView(accountResponseModel);
     }
 
@@ -64,6 +64,25 @@ public class UserInteractor implements UserBoundary{
         }
         AllUserResponseModel responseGetAll = new AllUserResponseModel(users);
         return userPresenter.prepareSuccessView(responseGetAll);
+    }
+
+    @Override
+    public UserResponse responseToken(String jwt, String username) {
+        if(userRepository.isDeleted(username)){
+            return userPresenter.prepareNotFoundView("This user has been deleted.");
+        }
+        UserResponseModel responseModel = new UserResponseModel(jwt);
+        return userPresenter.prepareSuccessView(responseModel);
+    }
+
+    @Override
+    public UserResponse getInfo(String username) {
+        if(!userRepository.existsByName(username)) {
+            return userPresenter.prepareNotFoundView("User does not exists.");
+        }
+        User user = userRepository.getUserByName(username);
+        InfoResponseModel responseModel = new InfoResponseModel(user);
+        return userPresenter.prepareSuccessView(responseModel);
     }
 
     @Override

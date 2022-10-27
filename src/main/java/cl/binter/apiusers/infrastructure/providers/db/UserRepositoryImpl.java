@@ -11,6 +11,7 @@ import cl.binter.apiusers.infrastructure.providers.db.model.UserDataMapper;
 
 import cl.binter.apiusers.usecase.requests.UserRequestModel;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 @AllArgsConstructor
@@ -25,8 +26,20 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
+    public boolean isDeleted(String name) {
+        return repository.getDeletedDateByUser(name) != null;
+    }
+
+    @Override
+    public User getUserByName(String name) {
+        UserDataMapper userDM = repository.getUserByName(name);
+        return new CommonUser(userDM.getId(), userDM.getName(), userDM.getPassword(),
+                userDM.getRol(), userDM.getCreatedAt(), userDM.getUpdatedAt(), userDM.getDeletedAt());
+    }
+
+    @Override
     public void save(UserRequestModel requestModel) {
-        UserDataMapper accountDataMapper = new UserDataMapper(requestModel.getName(), requestModel.getPassword());
+        UserDataMapper accountDataMapper = new UserDataMapper(requestModel.getName(), new BCryptPasswordEncoder().encode(requestModel.getPassword()));
         repository.save(accountDataMapper);
     }
 
@@ -51,7 +64,8 @@ public class UserRepositoryImpl implements UserRepository{
     private List<User> convertToUsers(List<UserDataMapper> usersDataMapper){
         List<User> users = new ArrayList<>();
         for(UserDataMapper u : usersDataMapper) {
-            users.add(new CommonUser(u.getId(), u.getName(), u.getPassword(), u.getCreatedAt(), u.getUpdatedAt(), u.getDeletedAt()));
+            users.add(new CommonUser(u.getId(), u.getName(), u.getPassword(),
+                    u.getRol(), u.getCreatedAt(), u.getUpdatedAt(), u.getDeletedAt()));
         }
         return users;
     }

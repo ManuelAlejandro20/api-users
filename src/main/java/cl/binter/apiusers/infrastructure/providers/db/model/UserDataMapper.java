@@ -2,6 +2,8 @@ package cl.binter.apiusers.infrastructure.providers.db.model;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -22,6 +24,8 @@ public class UserDataMapper {
     private String name;
     @Column(name = "password", nullable = false)
     private String password;
+    @Column(name = "rol", nullable = false)
+    private String rol;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
@@ -35,7 +39,13 @@ public class UserDataMapper {
     }
 
     @PrePersist
-    public void setCreationTime(){
+    public void prePersist(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"))){
+            this.rol = "ADMIN";
+        }else{
+            this.rol = "USER";
+        }
         this.createdAt = LocalDateTime.now();
         this.updatedAt = null;
         this.deletedAt = null;
