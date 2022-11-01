@@ -27,8 +27,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.4'
-    testImplementation 'org.mockito:mockito-core:4.6.1'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.5'
+    testImplementation 'org.mockito:mockito-core:4.8.0'
     testImplementation 'junit:junit:4.13.2'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.7.5'
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
@@ -43,4 +43,9 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+bootJar {
+    baseName = 'api-users'
+    version =  '1.0.0'
 }

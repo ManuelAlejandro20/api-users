@@ -3,11 +3,9 @@ package cl.binter.apiusers.configuration;
 import cl.binter.apiusers.domain.entities.CommonUserFactory;
 import cl.binter.apiusers.domain.entities.UserFactory;
 import cl.binter.apiusers.infrastructure.UserResponseFormatter;
-import cl.binter.apiusers.usecase.UserDS;
 import cl.binter.apiusers.usecase.UserPresenter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Configuration
 public class ApiUsersConfiguration {

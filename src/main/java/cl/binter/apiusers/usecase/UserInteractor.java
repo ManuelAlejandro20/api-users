@@ -90,7 +90,7 @@ public class UserInteractor implements UserBoundary{
         if (!userRepository.existsByName(requestModel.getName())) {
             return userPresenter.prepareNotFoundView("User does not exists.");
         }
-        userRepository.delete(requestModel);
+        userRepository.delete(requestModel.getName());
 
         UserResponseModel responseDelete = new UserResponseModel("The user " + requestModel.getName() + " has been deleted.");
         return userPresenter.prepareSuccessView(responseDelete);

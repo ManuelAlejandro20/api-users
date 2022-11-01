@@ -27,7 +27,8 @@ public class UserRepositoryImpl implements UserRepository{
 
     @Override
     public boolean isDeleted(String name) {
-        return repository.getDeletedDateByUser(name) != null;
+        UserDataMapper user = repository.getUserByName(name);
+        return user.getDeletedAt() != null;
     }
 
     @Override
@@ -57,8 +58,10 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
-    public void delete(UserRequestModel requestModel) {
-        repository.logicalDeleteByName(requestModel.getName(), LocalDateTime.now());
+    public void delete(String name) {
+        UserDataMapper user = repository.getUserByName(name);
+        user.setDeletedAt(LocalDateTime.now());
+        repository.save(user);
     }
 
     private List<User> convertToUsers(List<UserDataMapper> usersDataMapper){

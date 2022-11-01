@@ -10,7 +10,7 @@ public interface UserRepository {
     boolean isDeleted(String name);
     User getUserByName(String name);
     void save(UserRequestModel requestModel);
-    void delete(UserRequestModel requestModel);
+    void delete(String name);
     List<User> getAll();
     List<User> getAll(boolean onlyDeleted);
 }
