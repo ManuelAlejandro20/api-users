@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import cl.binter.apiusers.domain.entities.CommonUser;
 import cl.binter.apiusers.domain.entities.User;
+import cl.binter.apiusers.domain.entities.UserFactory;
 import cl.binter.apiusers.domain.repository.UserRepository;
 import cl.binter.apiusers.infrastructure.providers.db.model.UserDataMapper;
 
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 public class UserRepositoryImpl implements UserRepository{
 
     private final DbUserRepository repository;
+    private final UserFactory userFactory;
 
     @Override
     public boolean existsByName(String name) {
@@ -34,7 +35,7 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     public User getUserByName(String name) {
         UserDataMapper userDM = repository.getUserByName(name);
-        return new CommonUser(userDM.getId(), userDM.getName(), userDM.getPassword(),
+        return userFactory.create(userDM.getId(), userDM.getName(), userDM.getPassword(),
                 userDM.getRol(), userDM.getCreatedAt(), userDM.getUpdatedAt(), userDM.getDeletedAt());
     }
 
@@ -67,7 +68,7 @@ public class UserRepositoryImpl implements UserRepository{
     private List<User> convertToUsers(List<UserDataMapper> usersDataMapper){
         List<User> users = new ArrayList<>();
         for(UserDataMapper u : usersDataMapper) {
-            users.add(new CommonUser(u.getId(), u.getName(), u.getPassword(),
+            users.add(userFactory.create(u.getId(), u.getName(), u.getPassword(),
                     u.getRol(), u.getCreatedAt(), u.getUpdatedAt(), u.getDeletedAt()));
         }
         return users;
