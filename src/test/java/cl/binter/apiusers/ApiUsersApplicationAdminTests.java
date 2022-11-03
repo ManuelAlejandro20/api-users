@@ -1,6 +1,7 @@
 package cl.binter.apiusers;
 
-import cl.binter.apiusers.domain.entities.UserDTO;
+import cl.binter.apiusers.domain.dto.UserDTO;
+import cl.binter.apiusers.domain.entities.CommonUser;
 import cl.binter.apiusers.domain.entities.User;
 import cl.binter.apiusers.domain.repository.UserRepository;
 import cl.binter.apiusers.usecase.UserPresenter;
@@ -59,10 +60,10 @@ public class ApiUsersApplicationAdminTests {
     public void getAll() throws Exception {
         LocalDateTime now = LocalDateTime.now();
         String nowString = now.format(DateTimeFormatter.ofPattern("hh:mm:ss"));
-        List<User> users = new ArrayList<>();
-        User user1 = new UserDTO(1, "manu123", "secreto", "USER",now, null, null);
-        User user2 = new UserDTO(2, "noemi1", "secreto", "ADMIN",now, null, null);
-        User user3 = new UserDTO(3, "javi890", "secreto", "USER",now, null, null);
+        List<UserDTO> users = new ArrayList<>();
+        UserDTO user1 = new UserDTO("manu123", "USER",now, null, null);
+        UserDTO user2 = new UserDTO("noemi1", "ADMIN",now, null, null);
+        UserDTO user3 = new UserDTO("javi890", "USER",now, null, null);
         users.add(user1);
         users.add(user2);
         users.add(user3);

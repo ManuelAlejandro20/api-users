@@ -2,6 +2,7 @@ package cl.binter.apiusers.domain.repository;
 
 import java.util.List;
 
+import cl.binter.apiusers.domain.dto.UserDTO;
 import cl.binter.apiusers.domain.entities.User;
 import cl.binter.apiusers.usecase.requests.UserRequestModel;
 
@@ -16,6 +17,7 @@ public interface UserRepository {
     User getUserByName(String name);
     void save(UserRequestModel requestModel);
     void delete(String name);
-    List<User> getAll();
-    List<User> getAll(boolean onlyDeleted);
+    UserDTO getUserDTO(String name);
+    List<UserDTO> getAll();
+    List<UserDTO> getAll(boolean onlyDeleted);
 }

@@ -1,6 +1,6 @@
 package cl.binter.apiusers.configuration;
 
-import cl.binter.apiusers.domain.entities.UserDTOFactory;
+import cl.binter.apiusers.domain.entities.CommonUserFactory;
 import cl.binter.apiusers.domain.entities.UserFactory;
 import cl.binter.apiusers.infrastructure.UserResponseFormatter;
 import cl.binter.apiusers.usecase.UserPresenter;
@@ -15,7 +15,7 @@ public class ApiUsersConfiguration {
 
     @Bean
     public UserFactory beanUserFactory() {
-        return new UserDTOFactory();
+        return new CommonUserFactory();
     }
 
     @Bean

@@ -1,5 +1,6 @@
 package cl.binter.apiusers.usecase;
 
+import cl.binter.apiusers.domain.dto.UserDTO;
 import cl.binter.apiusers.domain.entities.User;
 import cl.binter.apiusers.domain.entities.UserFactory;
 import cl.binter.apiusers.domain.repository.UserRepository;
@@ -55,7 +56,7 @@ public class UserInteractor implements UserBoundary{
      * */
     @Override
     public UserResponse getAll() {
-        List<User> users = userRepository.getAll();
+        List<UserDTO> users = userRepository.getAll();
         if(users.isEmpty()) {
             return userPresenter.prepareNotFoundView("No users registered.");
         }
@@ -71,7 +72,7 @@ public class UserInteractor implements UserBoundary{
      * */
     @Override
     public UserResponse getAllNotDeleted() {
-        List<User> users = userRepository.getAll(false);
+        List<UserDTO> users = userRepository.getAll(false);
         if(users.isEmpty()) {
             return userPresenter.prepareNotFoundView("No users available.");
         }
@@ -87,7 +88,7 @@ public class UserInteractor implements UserBoundary{
      * */
     @Override
     public UserResponse getAllDeleted() {
-        List<User> users = userRepository.getAll(true);
+        List<UserDTO> users = userRepository.getAll(true);
         if(users.isEmpty()) {
             return userPresenter.prepareNotFoundView("No users deleted.");
         }
@@ -121,7 +122,7 @@ public class UserInteractor implements UserBoundary{
         if(!userRepository.existsByName(username)) {
             return userPresenter.prepareNotFoundView("User does not exists.");
         }
-        User user = userRepository.getUserByName(username);
+        UserDTO user = userRepository.getUserDTO(username);
         UserResponseModel responseModel = new UserResponseModel(user);
         return userPresenter.prepareSuccessView(responseModel);
     }

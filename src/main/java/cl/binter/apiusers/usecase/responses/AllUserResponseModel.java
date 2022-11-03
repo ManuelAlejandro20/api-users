@@ -1,5 +1,6 @@
 package cl.binter.apiusers.usecase.responses;
 
+import cl.binter.apiusers.domain.dto.UserDTO;
 import cl.binter.apiusers.domain.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,5 +13,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AllUserResponseModel extends UserResponse{
-    private List<User> users;
+    private List<UserDTO> users;
 }

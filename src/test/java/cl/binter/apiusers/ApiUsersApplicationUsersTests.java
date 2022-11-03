@@ -1,6 +1,6 @@
 package cl.binter.apiusers;
 
-import cl.binter.apiusers.domain.entities.UserDTO;
+import cl.binter.apiusers.domain.entities.CommonUser;
 import cl.binter.apiusers.domain.entities.User;
 import cl.binter.apiusers.usecase.UserBoundary;
 import cl.binter.apiusers.usecase.UserPresenter;
@@ -55,7 +55,7 @@ public class ApiUsersApplicationUsersTests {
     public void getInfo() throws Exception {
         LocalDateTime now = LocalDateTime.now();
         String nowString = now.format(DateTimeFormatter.ofPattern("hh:mm:ss"));
-        User user = new UserDTO(1, "manu123", "secreto", "USER",now, null, null);
+        User user = new CommonUser(1, "manu123", "secreto", "USER",now, null, null);
         UserResponseModel infoResponse = new UserResponseModel(user);
         infoResponse.setCurrentTime(nowString);
         when(userBoundary.getInfo(any(String.class))).thenReturn(infoResponse);

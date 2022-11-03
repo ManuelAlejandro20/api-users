@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import cl.binter.apiusers.domain.dto.UserDTO;
 import cl.binter.apiusers.domain.entities.User;
 import cl.binter.apiusers.domain.entities.UserFactory;
 import cl.binter.apiusers.domain.repository.UserRepository;
@@ -60,6 +61,12 @@ public class UserRepositoryImpl implements UserRepository{
                 userDM.getRol(), userDM.getCreatedAt(), userDM.getUpdatedAt(), userDM.getDeletedAt());
     }
 
+    @Override
+    public UserDTO getUserDTO(String name) {
+        UserDataMapper userDM = repository.getUserByName(name);
+        return new UserDTO(userDM.getName(), userDM.getRol(), userDM.getCreatedAt(), userDM.getUpdatedAt(), userDM.getDeletedAt());
+    }
+
     /*
     *
     * Crea la entidad de JPA y luego la persiste
@@ -78,7 +85,7 @@ public class UserRepositoryImpl implements UserRepository{
     *
     * */
     @Override
-    public List<User> getAll() {
+    public List<UserDTO> getAll() {
         return convertToUsers(repository.findAll());
     }
 
@@ -89,7 +96,7 @@ public class UserRepositoryImpl implements UserRepository{
     *
     * */
     @Override
-    public List<User> getAll(boolean onlyDeleted) {
+    public List<UserDTO> getAll(boolean onlyDeleted) {
         if(onlyDeleted){
             return convertToUsers(repository.getAllDeleted());
         }
@@ -113,11 +120,10 @@ public class UserRepositoryImpl implements UserRepository{
     * Convierte una lista de entidades en un lista de DTO
     *
     * */
-    private List<User> convertToUsers(List<UserDataMapper> usersDataMapper){
-        List<User> users = new ArrayList<>();
+    private List<UserDTO> convertToUsers(List<UserDataMapper> usersDataMapper){
+        List<UserDTO> users = new ArrayList<>();
         for(UserDataMapper u : usersDataMapper) {
-            users.add(userFactory.create(u.getId(), u.getName(), u.getPassword(),
-                    u.getRol(), u.getCreatedAt(), u.getUpdatedAt(), u.getDeletedAt()));
+            users.add(new UserDTO(u.getName(),  u.getRol(), u.getCreatedAt(), u.getUpdatedAt(), u.getDeletedAt()));
         }
         return users;
     }
