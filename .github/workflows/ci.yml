@@ -34,4 +34,6 @@ jobs:
         arguments: build
     - name: Run tests
       run: ./gradlew clean test
+    - name: Build with gradle 
+      run: ./gradlew build      
       
