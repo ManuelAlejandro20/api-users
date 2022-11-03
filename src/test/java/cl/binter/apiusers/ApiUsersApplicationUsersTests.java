@@ -2,6 +2,7 @@ package cl.binter.apiusers;
 
 import cl.binter.apiusers.domain.entities.CommonUser;
 import cl.binter.apiusers.domain.entities.User;
+import cl.binter.apiusers.usecase.UserBoundary;
 import cl.binter.apiusers.usecase.UserPresenter;
 import cl.binter.apiusers.usecase.requests.UserRequestModel;
 import cl.binter.apiusers.usecase.responses.InfoResponseModel;
@@ -41,6 +42,8 @@ public class ApiUsersApplicationUsersTests {
     private MockMvc mvc;
     @MockBean
     private UserPresenter userPresenter;
+    @MockBean
+    private UserBoundary userBoundary;
 
     @BeforeEach
     public void setup() {
@@ -57,7 +60,7 @@ public class ApiUsersApplicationUsersTests {
         User user = new CommonUser(1, "manu123", "secreto", "USER",now, null, null);
         InfoResponseModel infoResponse = new InfoResponseModel(user);
         infoResponse.setCurrentTime(nowString);
-        when(userPresenter.prepareSuccessView(any(UserResponse.class))).thenReturn(infoResponse);
+        when(userBoundary.getInfo(any(String.class))).thenReturn(infoResponse);
 
         mvc.perform(get("/api/info")
                         .contentType(MediaType.APPLICATION_JSON))
