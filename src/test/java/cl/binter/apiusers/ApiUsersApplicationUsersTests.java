@@ -3,6 +3,7 @@ package cl.binter.apiusers;
 import cl.binter.apiusers.domain.entities.CommonUser;
 import cl.binter.apiusers.domain.entities.User;
 import cl.binter.apiusers.usecase.UserPresenter;
+import cl.binter.apiusers.usecase.requests.UserRequestModel;
 import cl.binter.apiusers.usecase.responses.InfoResponseModel;
 import cl.binter.apiusers.usecase.responses.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,11 +48,6 @@ public class ApiUsersApplicationUsersTests {
                 .webAppContextSetup(webApplicationContext)
                 .apply(springSecurity())
                 .build();
-    }
-
-    @Test
-    public void shouldCreateMockMvc(){
-        assertNotNull(mvc);
     }
 
     @Test

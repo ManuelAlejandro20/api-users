@@ -50,3 +50,5 @@ bootJar {
     baseName = 'api-users'
     version =  '1.0.0'
 }
+
+

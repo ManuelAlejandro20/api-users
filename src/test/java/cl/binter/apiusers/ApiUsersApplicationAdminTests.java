@@ -56,11 +56,6 @@ public class ApiUsersApplicationAdminTests {
     }
 
     @Test
-    public void shouldCreateMockMvc(){
-        assertNotNull(mvc);
-    }
-
-    @Test
     public void getAll() throws Exception {
         LocalDateTime now = LocalDateTime.now();
         String nowString = now.format(DateTimeFormatter.ofPattern("hh:mm:ss"));
