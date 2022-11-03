@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommonUser implements User{
+public class UserDTO implements User{
 
     private int id;
     private String name;
@@ -18,7 +18,7 @@ public class CommonUser implements User{
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
-    public CommonUser(String name, String password){
+    public UserDTO(String name, String password){
         this.name = name;
         this.password = password;
     }

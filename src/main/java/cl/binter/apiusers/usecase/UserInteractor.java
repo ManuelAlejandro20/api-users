@@ -11,7 +11,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
+/*
+*
+* Clase que contiene la lógica de negocio de la aplicación
+*
+* */
 @Service
 @AllArgsConstructor
 public class UserInteractor implements UserBoundary{
@@ -20,6 +24,13 @@ public class UserInteractor implements UserBoundary{
     private final UserPresenter userPresenter;
     private final UserFactory userFactory;
 
+    /*
+    *
+    * Obtiene la solicitud, verifica si el nombre ya existe y si la contraseña a utilizar es correcta.
+    * Luego manda la solicitud al repositorio para realizar la persistencia. Finalmente devuelve una
+    * respuesta
+    *
+    * */
     @Override
     public UserResponse create(UserRequestModel requestModel) {
         if (userRepository.existsByName(requestModel.getName())) {
@@ -36,6 +47,12 @@ public class UserInteractor implements UserBoundary{
         return userPresenter.prepareSuccessView(accountResponseModel);
     }
 
+    /*
+     *
+     * Obtiene todos los usuarios registrados en el sistema utilizando el repositorio, realiza una validación
+     * y deveulve una respuesta depenediendo si hay usuarios dentro de la base de datos
+     *
+     * */
     @Override
     public UserResponse getAll() {
         List<User> users = userRepository.getAll();
@@ -46,6 +63,12 @@ public class UserInteractor implements UserBoundary{
         return userPresenter.prepareSuccessView(responseGetAll);
     }
 
+    /*
+     *
+     * Obtiene todos los usuarios disponibles en el sistema utilizando el repositorio, realiza una validación
+     * y deveulve una respuesta depenediendo si hay usuarios disponibles.
+     *
+     * */
     @Override
     public UserResponse getAllNotDeleted() {
         List<User> users = userRepository.getAll(false);
@@ -56,6 +79,12 @@ public class UserInteractor implements UserBoundary{
         return userPresenter.prepareSuccessView(responseGetAll);
     }
 
+    /*
+     *
+     * Obtiene todos los usuarios eliminados del sistema utilizando el repositorio, realiza una validación
+     * y deveulve una respuesta depenediendo si hay usuarios disponibles.
+     *
+     * */
     @Override
     public UserResponse getAllDeleted() {
         List<User> users = userRepository.getAll(true);
@@ -66,6 +95,12 @@ public class UserInteractor implements UserBoundary{
         return userPresenter.prepareSuccessView(responseGetAll);
     }
 
+    /*
+     *
+     * Devuelve una respuesta que contiene el token y la hora actual, primero revisa si el usuario ha sido eliminado
+     * y deveulve una respuesta depenediendo de esto
+     *
+     * */
     @Override
     public UserResponse responseToken(String jwt, String username) {
         if(userRepository.isDeleted(username)){
@@ -75,16 +110,28 @@ public class UserInteractor implements UserBoundary{
         return userPresenter.prepareSuccessView(responseModel);
     }
 
+    /*
+     *
+     * Recibe un nombre por parametro y devuelve una respuesta dependiendo si el usuario fue eliminado de
+     * la base de datos.
+     *
+     * */
     @Override
     public UserResponse getInfo(String username) {
         if(!userRepository.existsByName(username)) {
             return userPresenter.prepareNotFoundView("User does not exists.");
         }
         User user = userRepository.getUserByName(username);
-        InfoResponseModel responseModel = new InfoResponseModel(user);
+        UserResponseModel responseModel = new UserResponseModel(user);
         return userPresenter.prepareSuccessView(responseModel);
     }
 
+    /*
+    *
+    * Recibe una solicitud y verifca que el usuario exista en la base de datos antes de eliminarlo
+    * Finalmente devuelve una respuesta.
+    *
+    * */
     @Override
     public UserResponse delete(UserRequestModel requestModel) {
         if (!userRepository.existsByName(requestModel.getName())) {

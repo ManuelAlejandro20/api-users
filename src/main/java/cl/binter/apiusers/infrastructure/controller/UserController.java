@@ -25,6 +25,11 @@ public class UserController {
     private JwtUtilService jwtUtilService;
     private AuthenticationManager authenticationManager;
 
+    /*
+    *
+    * Autentica al usuario y devuelve una respuesta con el token y la hora de ejecución
+    *
+    * */
     @PostMapping("/authenticate")
     public UserResponse authenticate(@RequestBody UserRequestModel requestModel){
         authenticationManager.authenticate(
@@ -36,32 +41,64 @@ public class UserController {
 
     }
 
+    /*
+    *
+    * Recibe una solicitud con el nombre del usuario y contraseña, devuelve una respuesta indicando
+    * que el usuario fue agregado correctamente o un mensaje con el error correspondiente.
+    *
+    * */
     @PostMapping("/register")
     public UserResponse create(@RequestBody UserRequestModel requestModel){
         return userBoundary.create(requestModel);
     }
 
+    /*
+    *
+    * Recibe una solicitud con el nombre de usuario y devuelve una respuesta indicando el error o un mensaje indicando que el usuario fue eliminado
+    * correctamente.
+    *
+    * */
     @PostMapping("/users/delete")
     public UserResponse delete(@RequestBody UserRequestModel requestModel){
         return userBoundary.delete(requestModel);
     }
 
+    /*
+    *
+    * Devuelve como respuesta todos los usuarios disponibles en base de datos.
+    *
+    * */
     @GetMapping("/users/all")
     public UserResponse getAll(){
         return userBoundary.getAll();
     }
 
+    /*
+     *
+     * Obtiene el usuario actualmente autenticado y devuelve una respuesta indicando toda su información
+     *
+     * */
     @GetMapping("/info")
     public UserResponse getInfo(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userBoundary.getInfo(auth.getName());
     }
 
+    /*
+    *
+    * Devuelve una respuesta con todos los usuarios que no han sido eliminados del sistema
+    *
+    * */
     @GetMapping("/users/available")
     public UserResponse getAllNotDeleted(){
         return userBoundary.getAllNotDeleted();
     }
 
+    /*
+     *
+     * Devuelve una respuesta con todos los usuarios que han sido eliminados del sistema
+     *
+     * */
     @GetMapping("/users/deleted")
     public UserResponse getAllDeleted(){
         return userBoundary.getAllDeleted();

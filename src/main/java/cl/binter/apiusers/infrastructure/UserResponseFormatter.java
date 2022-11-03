@@ -9,6 +9,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import cl.binter.apiusers.usecase.UserPresenter;
 
+/*
+*
+* Clase que configura la respuestas a mandar por parte de la api
+*
+* */
 public class UserResponseFormatter implements UserPresenter{
 
     @Override

@@ -1,12 +1,10 @@
 package cl.binter.apiusers;
 
-import cl.binter.apiusers.domain.entities.CommonUser;
+import cl.binter.apiusers.domain.entities.UserDTO;
 import cl.binter.apiusers.domain.entities.User;
 import cl.binter.apiusers.usecase.UserBoundary;
 import cl.binter.apiusers.usecase.UserPresenter;
-import cl.binter.apiusers.usecase.requests.UserRequestModel;
-import cl.binter.apiusers.usecase.responses.InfoResponseModel;
-import cl.binter.apiusers.usecase.responses.UserResponse;
+import cl.binter.apiusers.usecase.responses.UserResponseModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +55,8 @@ public class ApiUsersApplicationUsersTests {
     public void getInfo() throws Exception {
         LocalDateTime now = LocalDateTime.now();
         String nowString = now.format(DateTimeFormatter.ofPattern("hh:mm:ss"));
-        User user = new CommonUser(1, "manu123", "secreto", "USER",now, null, null);
-        InfoResponseModel infoResponse = new InfoResponseModel(user);
+        User user = new UserDTO(1, "manu123", "secreto", "USER",now, null, null);
+        UserResponseModel infoResponse = new UserResponseModel(user);
         infoResponse.setCurrentTime(nowString);
         when(userBoundary.getInfo(any(String.class))).thenReturn(infoResponse);
 
@@ -66,7 +64,7 @@ public class ApiUsersApplicationUsersTests {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentTime").value(nowString))
-                .andExpect(jsonPath("$.user.name").value("manu123"))
+                .andExpect(jsonPath("$.response.name").value("manu123"))
                 .andDo(print());
     }
 }

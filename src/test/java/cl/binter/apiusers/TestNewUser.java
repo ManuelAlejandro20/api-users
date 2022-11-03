@@ -59,7 +59,7 @@ public class TestNewUser {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value(ur.getMessage()))
+                .andExpect(jsonPath("$.response").value(ur.getResponse()))
                 .andExpect(jsonPath("$.currentTime").value(time))
                 .andDo(print());
     }

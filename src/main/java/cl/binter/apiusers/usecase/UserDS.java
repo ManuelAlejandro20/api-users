@@ -8,6 +8,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/*
+*
+* UserDetailsService personalizado, indica como se obtiene el usuario a autenticar
+*
+* */
 @AllArgsConstructor
 @Service
 public class UserDS implements UserDetailsService {

@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserResponseModel extends UserResponse{
 
-    private String message;
+    private Object response;
 
 }

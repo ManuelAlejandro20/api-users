@@ -16,7 +16,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
+/*
+*
+* Clase de configuración que define los beans necesarios para manejar la autenticación, la encriptación de contraseñas
+* y los filtros que tienen que ser invocados al momento de que el controlador maneje la solicitud
+*
+* */
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
@@ -37,6 +42,11 @@ public class WebSecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    /*
+    *
+    * Se desactiva la protección csrf ya que no procesaremos solicitudes utilizando formularios
+    *en un navegador
+    * */
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
 
