@@ -34,12 +34,8 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
     testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.7.3'
-
-
-
-
-
-
+    testImplementation "org.testcontainers:junit-jupiter:1.17.5"
+    testImplementation "org.testcontainers:postgresql:1.17.5"
 }
 
 tasks.named('test') {

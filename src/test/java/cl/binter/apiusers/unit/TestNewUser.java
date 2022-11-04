@@ -1,4 +1,4 @@
-package cl.binter.apiusers;
+package cl.binter.apiusers.unit;
 
 import cl.binter.apiusers.domain.entities.User;
 import cl.binter.apiusers.domain.repository.UserRepository;
@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -60,8 +59,7 @@ public class TestNewUser {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.response").value(ur.getResponse()))
-                .andExpect(jsonPath("$.currentTime").value(time))
-                .andDo(print());
+                .andExpect(jsonPath("$.currentTime").value(time));
     }
 
     @Test
@@ -73,8 +71,7 @@ public class TestNewUser {
         mvc.perform(post("/api/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isConflict())
-                .andDo(print());
+                .andExpect(status().isConflict());
     }
 
     @Test
@@ -87,8 +84,7 @@ public class TestNewUser {
         mvc.perform(post("/api/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isConflict())
-                .andDo(print());
+                .andExpect(status().isConflict());
     }
 
 }

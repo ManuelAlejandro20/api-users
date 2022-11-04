@@ -1,10 +1,10 @@
-package cl.binter.apiusers;
+package cl.binter.apiusers.unit;
 
-import cl.binter.apiusers.domain.entities.CommonUser;
-import cl.binter.apiusers.domain.entities.User;
-import cl.binter.apiusers.usecase.UserBoundary;
+import cl.binter.apiusers.domain.dto.UserDTO;
+import cl.binter.apiusers.domain.repository.UserRepository;
 import cl.binter.apiusers.usecase.UserPresenter;
-import cl.binter.apiusers.usecase.responses.UserResponseModel;
+import cl.binter.apiusers.usecase.responses.AllUserResponseModel;
+import cl.binter.apiusers.usecase.responses.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +19,21 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@WithMockUser(username = "manu123",password = "secreto", roles = {"USER"})
-public class ApiUsersApplicationUsersTests {
+@WithMockUser(username = "manu123",password = "secreto", roles = {"ADMIN"})
+public class ApiUsersApplicationAdminTests {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -41,7 +42,7 @@ public class ApiUsersApplicationUsersTests {
     @MockBean
     private UserPresenter userPresenter;
     @MockBean
-    private UserBoundary userBoundary;
+    private UserRepository userRepository;
 
     @BeforeEach
     public void setup() {
@@ -52,19 +53,26 @@ public class ApiUsersApplicationUsersTests {
     }
 
     @Test
-    public void getInfo() throws Exception {
+    public void getAll() throws Exception {
         LocalDateTime now = LocalDateTime.now();
         String nowString = now.format(DateTimeFormatter.ofPattern("hh:mm:ss"));
-        User user = new CommonUser(1, "manu123", "secreto", "USER",now, null, null);
-        UserResponseModel infoResponse = new UserResponseModel(user);
-        infoResponse.setCurrentTime(nowString);
-        when(userBoundary.getInfo(any(String.class))).thenReturn(infoResponse);
+        List<UserDTO> users = new ArrayList<>();
+        UserDTO user1 = new UserDTO("manu123", "USER",now, null, null);
+        UserDTO user2 = new UserDTO("noemi1", "ADMIN",now, null, null);
+        UserDTO user3 = new UserDTO("javi890", "USER",now, null, null);
+        users.add(user1);
+        users.add(user2);
+        users.add(user3);
 
-        mvc.perform(get("/api/info")
+        AllUserResponseModel allUserResponseModel = new AllUserResponseModel(users);
+        allUserResponseModel.setCurrentTime(nowString);
+        when(userRepository.getAll()).thenReturn(users);
+        when(userPresenter.prepareSuccessView(any(UserResponse.class))).thenReturn(allUserResponseModel);
+
+        mvc.perform(get("/api/users/all")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentTime").value(nowString))
-                .andExpect(jsonPath("$.response.name").value("manu123"))
-                .andDo(print());
+                .andExpect(jsonPath("$.users", hasSize(3)));
     }
 }
