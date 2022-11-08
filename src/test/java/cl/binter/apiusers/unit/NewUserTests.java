@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class TestNewUser {
+public class NewUserTests {
 
     @Autowired
     private MockMvc mvc;
@@ -59,7 +59,7 @@ public class TestNewUser {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.response").value(ur.getResponse()))
-                .andExpect(jsonPath("$.currentTime").value(time));
+                .andExpect(jsonPath("$.currentTime").value(ur.getCurrentTime()));
     }
 
     @Test
