@@ -80,6 +80,26 @@ public class UserRepositoryImpl implements UserRepository{
 
     /*
     *
+    * Obtiene la solicitud y el nombre de usuario. Obtiene la entidad desde la base de datos y se realizan
+    * los cambios correspondientes dependiendo si los campos en la solicitud son nulos o no. Finalmente se establece
+    * una nueva fecha de utlima actualización.
+    *
+    * */
+    @Override
+    public void update(UserRequestModel requestModel, String username) {
+        UserDataMapper userDM = repository.getUserByName(username);
+        if(requestModel.getName() != null) {
+            userDM.setName(requestModel.getName());
+        }
+        if(requestModel.getPassword() != null) {
+            userDM.setPassword(new BCryptPasswordEncoder().encode(requestModel.getPassword()));
+        }
+        userDM.setUpdatedAt(LocalDateTime.now());
+        repository.save(userDM);
+    }
+
+    /*
+    *
     * Obtiene una lista de entidades desde el repositorio de JPA que
     * luego se convierte e una lista de DTO de usuarios
     *

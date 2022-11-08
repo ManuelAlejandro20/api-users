@@ -1,13 +1,16 @@
 package cl.binter.apiusers.integration;
 
 import cl.binter.apiusers.domain.dto.UserDTO;
+import cl.binter.apiusers.domain.entities.CommonUser;
 import cl.binter.apiusers.domain.repository.UserRepository;
 import cl.binter.apiusers.usecase.requests.UserRequestModel;
-import org.junit.jupiter.api.Order;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -15,9 +18,6 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -28,7 +28,7 @@ public class UserRepositoryTests {
 
     @Autowired
     private UserRepository userRepository;
-
+    ObjectMapper objectMapper;
     @Container
     public static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:11-alpine")
             .withDatabaseName("bdapi")
@@ -40,6 +40,11 @@ public class UserRepositoryTests {
         registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
         registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
         registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
+    }
+
+    @BeforeEach
+    public void setup() {
+        objectMapper = new ObjectMapper();
     }
 
     @Test
@@ -57,7 +62,7 @@ public class UserRepositoryTests {
     }
 
     @Test
-    @WithMockUser(username = "manu123",password = "secreto", roles = {"USER"})
+    @WithMockUser(username = "manu123",password = "secreto", roles = "USER")
     public void saveUserWithUser(){
 
         UserRequestModel request = new UserRequestModel("manu98", "secreto");
@@ -95,6 +100,86 @@ public class UserRepositoryTests {
         assertNotNull(user);
         assert(user.getName().equals(request.getName()));
         assertNotNull(user.getDeletedAt());
+
+    }
+
+    @Test
+    @WithMockUser(username = "manu1",password = "secreto", roles = "USER")
+    public void updateUser(){
+
+        String oldUsername = "manu1";
+        String oldPassword = "secreto";
+        userRepository.save(new UserRequestModel(oldUsername, oldPassword));
+
+        String newUsername = "manu1000";
+        String newPassword = "secreto1";
+        userRepository.update(new UserRequestModel(newUsername, newPassword), oldUsername);
+
+        CommonUser user = (CommonUser) userRepository.getUserByName(newUsername);
+
+        assertNotNull(user);
+        assertNotNull(user.getUpdatedAt());
+        assert(!user.getName().equals(oldUsername));
+        assert(!new BCryptPasswordEncoder().matches(
+                oldPassword,
+                user.getPassword()
+        ));
+        assert(user.getName().equals(newUsername));
+        assert(new BCryptPasswordEncoder().matches(
+                newPassword,
+                user.getPassword()
+        ));
+
+    }
+
+    @Test
+    @WithMockUser(username = "manu2",password = "secreto", roles = "USER")
+    public void updateUserOnlyUsername(){
+
+        String oldUsername = "manu2";
+        String password = "secreto";
+        userRepository.save(new UserRequestModel(oldUsername, password));
+
+        String newUsername = "manu2000";
+        userRepository.update(new UserRequestModel(newUsername, null), oldUsername);
+
+        CommonUser user = (CommonUser) userRepository.getUserByName(newUsername);
+
+        assertNotNull(user);
+        assertNotNull(user.getUpdatedAt());
+        assert(!user.getName().equals(oldUsername));
+        assert(user.getName().equals(newUsername));
+        assert(new BCryptPasswordEncoder().matches(
+                password,
+                user.getPassword()
+        ));
+
+    }
+
+    @Test
+    @WithMockUser(username = "manu3",password = "secreto", roles = "USER")
+    public void updateUserOnlyPassword(){
+
+        String username = "manu3";
+        String oldPassword = "secreto";
+        userRepository.save(new UserRequestModel(username, oldPassword));
+
+        String newPassword = "secreto1";
+        userRepository.update(new UserRequestModel(null, newPassword), username);
+
+        CommonUser user = (CommonUser) userRepository.getUserByName(username);
+
+        assertNotNull(user);
+        assertNotNull(user.getUpdatedAt());
+        assert(user.getName().equals(username));
+        assert(!new BCryptPasswordEncoder().matches(
+                oldPassword,
+                user.getPassword()
+        ));
+        assert(new BCryptPasswordEncoder().matches(
+                newPassword,
+                user.getPassword()
+        ));
 
     }
 

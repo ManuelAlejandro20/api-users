@@ -11,6 +11,7 @@ import cl.binter.apiusers.usecase.responses.UserResponse;
  * */
 public interface UserBoundary {
     UserResponse create(UserRequestModel requestModel);
+    UserResponse update(UserRequestModel requestModel, String username);
     UserResponse delete(UserRequestModel requestModel);
     UserResponse getAll();
     UserResponse getAllNotDeleted();

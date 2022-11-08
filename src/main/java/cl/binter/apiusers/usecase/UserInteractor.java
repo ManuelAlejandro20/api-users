@@ -34,6 +34,7 @@ public class UserInteractor implements UserBoundary{
     * */
     @Override
     public UserResponse create(UserRequestModel requestModel) {
+
         if (userRepository.existsByName(requestModel.getName())) {
             return userPresenter.prepareConflictView("User already exists.");
         }
@@ -45,6 +46,39 @@ public class UserInteractor implements UserBoundary{
         userRepository.save(requestModel);
 
         UserResponseModel accountResponseModel = new UserResponseModel("User " + user.getName() + " has been created.");
+        return userPresenter.prepareSuccessView(accountResponseModel);
+    }
+
+    /*
+    *
+    * Obtiene la solicitud y el nombre de usuario autenticando. Verifica que la nueva contraseña a ingresar
+    * sea válida. Verifica que el nuevo nombre de usuario no exista en la base de datos
+    * (si el nombre de usuario no cambia o no se especifica no se realiza la comprobación anterior). Finalmente
+    * si la operación se realiza de forma correcta devuelve una respuesta con un mensaje indicando que el
+    * usuario se actualizó correctamente.
+    *
+    * */
+    @Override
+    public UserResponse update(UserRequestModel requestModel, String username) {
+
+        User user = userFactory.create(requestModel.getName(), requestModel.getPassword());
+
+        if(user.getPassword() != null){
+            if (!user.passwordIsValid()) {
+                return userPresenter.prepareConflictView("User password must have more than 5 characters.");
+            }
+        }
+
+        if(user.getName() != null){
+            if(!requestModel.getName().equals(username) && userRepository.existsByName(requestModel.getName())) {
+                return userPresenter.prepareConflictView("User already exists.");
+            }
+            //Aqui se pueden agregar mas comprobaciones para el nombre de usuario
+        }
+
+        userRepository.update(requestModel, username);
+
+        UserResponseModel accountResponseModel = new UserResponseModel("User " + username + " has been updated.");
         return userPresenter.prepareSuccessView(accountResponseModel);
     }
 

@@ -68,6 +68,7 @@ public class WebSecurityConfig {
                 .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/users/**").hasRole("ADMIN")
                 .antMatchers("/api/info").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/api/update").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

@@ -16,6 +16,7 @@ public interface UserRepository {
     boolean isDeleted(String name);
     User getUserByName(String name);
     void save(UserRequestModel requestModel);
+    void update(UserRequestModel requestModel, String username);
     void delete(String name);
     UserDTO getUserDTO(String name);
     List<UserDTO> getAll();

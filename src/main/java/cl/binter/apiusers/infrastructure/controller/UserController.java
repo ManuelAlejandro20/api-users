@@ -54,6 +54,18 @@ public class UserController {
 
     /*
     *
+    * Recibe una solicitud con el nombre o contraseña de un usuario, devuelve
+    * una respuesta indicando que la operación se realizó de forma correcta
+    *
+    * */
+    @PostMapping("/update")
+    public UserResponse update(@RequestBody UserRequestModel requestModel){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return userBoundary.update(requestModel, auth.getName());
+    }
+
+    /*
+    *
     * Recibe una solicitud con el nombre de usuario y devuelve una respuesta indicando el error o un mensaje indicando que el usuario fue eliminado
     * correctamente.
     *
