@@ -33,6 +33,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/*
+*
+* Tests que validan las rutas a las que puede acceder un administrador.
+*
+* */
 @SpringBootTest
 @AutoConfigureMockMvc
 @WithMockUser(username = "manu123",password = "secreto", roles = "ADMIN")
@@ -49,6 +54,14 @@ public class AdminTests {
         objectMapper = new ObjectMapper();
     }
 
+    /*
+    *
+    * Test que busca entregar todos los usuarios registrados en el sistema. Se hace un Mock del método getAll()
+    * del repositorio que devuelve una lista de usuarios. Se espera un status HTTP 200 y que el tiempo
+    * de ejecución junto con la respuesta devuelta por la api sean los mismos que la respuesta
+    * establecida en el test.
+    *
+    * */
     @Test
     public void getAll() throws Exception {
 
@@ -76,6 +89,14 @@ public class AdminTests {
                 .andDo(print());
     }
 
+    /*
+    *
+    * Test que elimina un usuario. Se mockea el método existsByName() del repositorio,
+    * tambien ignora el metodo delete(). Se espera un status HTTP 200 y que el tiempo
+    * de ejecución junto con la respuesta devuelta por la api sean los mismos que la respuesta
+    * establecida en el test.
+    *
+    * */
     @Test
     public void deleteUser() throws Exception {
 
@@ -97,6 +118,13 @@ public class AdminTests {
                 .andExpect(jsonPath("$.currentTime").value(response.getCurrentTime()));
     }
 
+    /*
+    *
+    * Test que busca verificar que ocurre cuando se elimina un usuario que no existe. Se mockea el método existbyName()
+    * del repositorio para simular que se devolvería en caso de querer eliminar un usuario no existente. Se verifica
+    * que la respuesta recibida sea HTTP 404 (not found).
+    *
+    * */
     @Test
     public void userThatDoesntExists() throws Exception {
 
@@ -111,6 +139,12 @@ public class AdminTests {
                 .andExpect(status().isNotFound());
     }
 
+    /*
+    *
+    * Se intenta acceder a una ruta de administradores siendo un usuario anonimo
+    * en este caso se verifica que la respuesta recibida sea HTTP 403 (Forbidden)
+    *
+    * */
     @Test
     @WithAnonymousUser
     public void deleteUserAnonymous() throws Exception {

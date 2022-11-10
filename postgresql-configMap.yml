@@ -1,0 +1,10 @@
+apiVersion : v1
+kind : ConfigMap
+metadata:
+  name : db-config
+data:
+  datasource-url: jdbc:postgresql://postgresql:5432/bdapi?useSSL=false
+  jpa-hibernate-ddl: update
+  jpa-show-sql: "true"
+  pathmatch-matching-strategy: ant-path-matcher
+  dbName: bdapi

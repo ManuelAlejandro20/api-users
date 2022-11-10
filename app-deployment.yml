@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apiusers-svc
+spec:
+  selector:
+    matchLabels:
+      app: apiusers-k8s-postgresql
+  template:
+    metadata:
+      labels:
+        app: apiusers-k8s-postgresql
+    spec:
+      containers:
+        - name: springboot-app
+          image: springboot-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom :
+                configMapKeyRef :
+                  name : db-config
+                  key :  datasource-url
+
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              valueFrom :
+                configMapKeyRef :
+                  name : db-config
+                  key :  jpa-hibernate-ddl
+
+            - name: SPRING_JPA_SHOW_SQL
+              valueFrom :
+                configMapKeyRef :
+                  name : db-config
+                  key :  jpa-show-sql
+
+            - name: SPRING_MVC_PATHMATCH_MATCHING_STRATEGY
+              valueFrom :
+                configMapKeyRef :
+                  name : db-config
+                  key :  pathmatch-matching-strategy
+
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom :
+                secretKeyRef :
+                  name : postgresql-secrets
+                  key :  username
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom :
+                secretKeyRef :
+                  name : postgresql-secrets
+                  key :  password
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: apiusers-svc
+spec:
+  selector:
+    app: apiusers-k8s-postgresql
+  ports:
+    - protocol: "TCP"
+      port: 8080
+      targetPort: 8080
+      nodePort: 30000
+  type: NodePort

@@ -23,6 +23,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/*
+*
+* Tests que validan los métodos que se relacionan con el registro de nuevos usuarios
+*
+* */
 @SpringBootTest
 @AutoConfigureMockMvc
 public class NewUserTests {
@@ -41,6 +46,14 @@ public class NewUserTests {
         objectMapper = new ObjectMapper();
     }
 
+    /*
+    *
+    * Test en el que se busca ingresar un nuevo usuario. Mockea el método existsByName() del repositorio para indicarnos que el usuario
+    * no existe en la base de datos, tambien ignora el metodo save(). Se espera un status HTTP 200 y que el tiempo
+     * de ejecución junto con la respuesta devuelta por la api sean los mismos que la respuesta
+     * establecida en el test.
+    *
+    * */
     @Test
     public void registerNewUser() throws Exception {
 
@@ -61,6 +74,13 @@ public class NewUserTests {
                 .andExpect(jsonPath("$.currentTime").value(ur.getCurrentTime()));
     }
 
+    /*
+    *
+    * Test que busca ingresar un usuario que ya existe Test. Mockea el método existsByName() del
+    * repostiorio para indicarnos que el usuario que se quiere registrar ya existe.
+    * Se verifica que se reciba una respuesta HTTP 409 (conflict).
+    *
+    * */
     @Test
     public void userAlreadyExists() throws Exception {
 
@@ -73,6 +93,14 @@ public class NewUserTests {
                 .andExpect(status().isConflict());
     }
 
+    /*
+    *
+    * test que busca ingresar un nuevo usuario pero con una constraseña invalida. Mockea el método existByName() para indicarnos que el usuario
+    * que se quiere agregar no existe en la base de datos y se mockea passwordIsValid() de
+    * la interface User para que devuelva que la contraseña no sea válida. A raiz de esto
+    * último se espera que la respuesta recibida de la api sea un HTTP 409 (Conflict)
+    *
+    * */
     @Test
     public void shortPassword() throws Exception {
 

@@ -21,6 +21,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+/*
+*
+* Pruebas de integración realizadas con testcontainer para probar la interacción con la base de datos de la api.
+*
+* */
 @Testcontainers
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -47,6 +52,13 @@ public class UserRepositoryTests {
         objectMapper = new ObjectMapper();
     }
 
+    /*
+    *
+    * test en el que un usuario anonimo ingresa un nuevo usuario al sistema. Se verifica que
+    * el usuario ingresado no sea nulo, que tenga un rol USER, que no tenga una fecha de eliminación
+    * válida y que tenga el mismo nombre que se estableció en la solicitud del test.
+    *
+    * */
     @Test
     @WithAnonymousUser
     public void saveUserWithAnon(){
@@ -61,6 +73,13 @@ public class UserRepositoryTests {
 
     }
 
+    /*
+     *
+     * test en el que un usuario del tipo USER ingresa un nuevo usuario al sistema. Se verifica que
+     * el usuario ingresado no sea nulo, que tenga un rol USER, que no tenga una fecha de eliminación
+     * válida y que tenga el mismo nombre que se estableció en la solicitud del test.
+     *
+     * */
     @Test
     @WithMockUser(username = "manu123",password = "secreto", roles = "USER")
     public void saveUserWithUser(){
@@ -75,6 +94,13 @@ public class UserRepositoryTests {
 
     }
 
+    /*
+     *
+     * test en el que un administrador ingresa un nuevo usuario al sistema. Se verifica que
+     * el usuario ingresado no sea nulo, que tenga un rol ADMIN, que no tenga una fecha de eliminación
+     * válida y que tenga el mismo nombre que se estableció en la solicitud del test.
+     *
+     * */
     @Test
     @WithMockUser(username = "manu123",password = "secreto", roles = {"ADMIN"})
     public void saveUserWithAdmin(){
@@ -89,6 +115,13 @@ public class UserRepositoryTests {
 
     }
 
+    /*
+     *
+     * test en el que se elimina un usuario sistema. Posteriormente se obtiene este usuario
+     * de la base de datos y se verifica que el usuario devuelto no sea nulo, que tenga una fecha de eliminación
+     * válida y que tenga el mismo nombre que se estableció en la solicitud del test.
+     *
+     * */
     @Test
     @WithMockUser(username = "manu123",password = "secreto", roles = {"ADMIN"})
     public void deleteUser(){
@@ -103,6 +136,14 @@ public class UserRepositoryTests {
 
     }
 
+    /*
+     *
+     * test en el que se actualiza un usuario en el sistema. Posteriormente se obtiene este usuario
+     * de la base de datos y se verifica que el usuario devuelto no sea nulo, que tenga una fecha de actualización
+     * válida, que su actual nombre de usuario y contraseña correspondan a los datos establecidos en el test pero que
+     * sean diferentes a los datos antiguos establecidos en el test.
+     *
+     * */
     @Test
     @WithMockUser(username = "manu1",password = "secreto", roles = "USER")
     public void updateUser(){
@@ -132,6 +173,15 @@ public class UserRepositoryTests {
 
     }
 
+    /*
+     *
+     * test en el que se actualiza un usuario en el sistema, pero esta vez simplemente se actualiza
+     * el nombre. Posteriormente se obtiene este usuario de la base de datos y se verifica que el usuario
+     * devuelto no sea nulo, que tenga una fecha de actualización válida, que su actual nombre de usuario
+     * corresponda a los datos establecidos en el test pero que
+     * sean diferentes a los datos antiguos establecidos en el test.
+     *
+     * */
     @Test
     @WithMockUser(username = "manu2",password = "secreto", roles = "USER")
     public void updateUserOnlyUsername(){
@@ -156,6 +206,15 @@ public class UserRepositoryTests {
 
     }
 
+    /*
+     *
+     * test en el que se actualiza un usuario en el sistema, pero esta vez simplemente se actualiza
+     * su contraseña. Posteriormente se obtiene este usuario de la base de datos y se verifica que el usuario
+     * devuelto no sea nulo, que tenga una fecha de actualización válida, que su actual contraseña
+     * corresponda a los datos establecidos en el test pero que
+     * sean diferentes a los datos antiguos establecidos en el test.
+     *
+     * */
     @Test
     @WithMockUser(username = "manu3",password = "secreto", roles = "USER")
     public void updateUserOnlyPassword(){

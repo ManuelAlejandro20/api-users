@@ -29,6 +29,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/*
+ *
+ * Tests que validan las rutas a las que puede acceder un usuario de tipo user.
+ *
+ * */
 @SpringBootTest
 @AutoConfigureMockMvc
 @WithMockUser(username = "manu123",password = "secreto", roles = "USER")
@@ -46,6 +51,16 @@ public class UserTests {
         objectMapper = new ObjectMapper();
     }
 
+    /*
+    *
+    * Test que verifica los datos devueltos por un usuario autenticado al realizar la llamada /api/info
+    * Se mockea el método existsByName() para que se estblezca que el usuario
+    * que intenta ver su información si exista. Además se devuelve un usuario ya
+    * declarado al acceder al método getUserDTO(). Se espera un status HTTP 200 y que el tiempo
+     * de ejecución junto con la respuesta devuelta por la api sean los mismos que la respuesta
+     * establecida en el test.
+    *
+    * */
     @Test
     public void getInfo() throws Exception {
 
@@ -65,6 +80,15 @@ public class UserTests {
                 .andExpect(jsonPath("$.response.name").value(user.getName()));
     }
 
+    /*
+    *
+    * test que valida la actualización de los datos de un usuario. Se mockea el método existsByName()
+    * para que se establezca que el nuevo nombre a ingresar no exista en la base de datos y tambien
+    * se ignora el método update() del repositorio. Se espera un status HTTP 200 y que el tiempo
+    * de ejecución junto con la respuesta devuelta por la api sean los mismos que la respuesta
+    * establecida en el test.
+    *
+    * */
     @Test
     public void updateUser() throws Exception {
 
@@ -85,6 +109,12 @@ public class UserTests {
                 .andExpect(jsonPath("$.response").value(response.getResponse()));
     }
 
+    /*
+    *
+    * Test en el que se intenta actualizar un usuario pero con una contraseña invalida. La respuesta
+    * esperada es un HTTP 409 (Conflict)
+    *
+    * */
     @Test
     public void updateUserShortPassword() throws Exception {
 
@@ -96,6 +126,14 @@ public class UserTests {
                 .andExpect(status().isConflict());
     }
 
+    /*
+    *
+    * test en el que se intenta actualizar un usuario pero con un nombre
+    * que ya exista previamente en la base de datos. Se mockea el método existsByName() para
+    * que nos indique que efectivamente ese usuario ya existe. Se verifica que la respuesta
+    * devuelta sea un HTTP 409 (Conflict).
+    *
+    * */
     @Test
     public void updateUserAlreadyExists() throws Exception {
 
@@ -110,6 +148,18 @@ public class UserTests {
                 .andDo(print());
     }
 
+    /*
+    *
+    * test que intenta actualizar solamente la contraseña del usuario, sin embargo igual se
+    * entrega el nombre de usuario en la solicitud. Se mockea el método existsByName()
+     * para que se establezca que el nuevo nombre a ingresar exista en la base de datos
+     * (dado a que corresponde al del mismo usuario a actualizar), sin embargo debido
+     * a que mantiene el nombre de usuario esta verificación se ignora. Tambien
+     * se ignora el método update() del repositorio. Se espera un status HTTP 200 y que el tiempo
+     * de ejecución junto con la respuesta devuelta por la api sean los mismos que la respuesta
+     * establecida en el test.
+    *
+    * */
     @Test
     public void updateUserKeepUsername() throws Exception {
 
@@ -131,6 +181,12 @@ public class UserTests {
                 .andDo(print());
     }
 
+    /*
+    *
+    * Test que llama a una ruta de un usuario autenticado siendo un usuario anonimo.
+    * En este caso se espera una respuesta HTTP 403 (Forbidden).
+    *
+    * */
     @Test
     @WithAnonymousUser
     public void getInfoAnonymous() throws Exception {
