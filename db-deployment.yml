@@ -14,7 +14,7 @@ spec:
 ---
 
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: postgresql
   labels:
@@ -55,7 +55,7 @@ spec:
               name: postgresql
           volumeMounts:
             - name: postgresql-persistent-storage
-              mountPath: /var/lib/postgresql
+              mountPath: /var/lib/postgresql/data
       volumes:
         - name: postgresql-persistent-storage
           persistentVolumeClaim:

@@ -242,5 +242,29 @@ public class UserRepositoryTests {
 
     }
 
+    /*
+     *
+     * Test en el que se elimina un usuario que no existe en la base de datos, al invocar el metodo
+     * delete del repositorio el programa arrojará una excepción debido a que se intentará traer
+     * desde la base de datos un usuario inexsitente.
+     *
+     * */
+    @Test
+    @WithMockUser(username = "manu3",password = "secreto", roles = "ADMIN")
+    public void deleteUserThatDontExists(){
+
+        UserDTO userDTO = null;
+        UserRequestModel request = new UserRequestModel();
+        request.setName("manu9999");
+
+        try{
+            userRepository.delete(request.getName());
+            userDTO = userRepository.getUserDTO(request.getName());
+            assertNotNull(userDTO);
+        }catch(NullPointerException e){
+            assertNull(userDTO);
+        }
+    }
+
 
 }
